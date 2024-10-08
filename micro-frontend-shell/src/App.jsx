@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { EventBus, Shell } from "@noodle/atomkit";
 
 // Define the dynamic Web Component loader
@@ -91,55 +91,30 @@ class DynamicComponentLoader extends HTMLElement {
 customElements.define("dynamic-component-loader", DynamicComponentLoader);
 
 const App = () => {
-  const [microFrontends, setMicroFrontends] = useState([]);
-  const [count, setCount] = useState(0);
-
-  // useEffect(() => {
-  //   // Fetch the micro-frontend metadata from a remote source
-  //   async function fetchMicroFrontends() {
-  //     const response = await fetch("/sites.json");
-  //     const data = await response.json();
-  //     setMicroFrontends(data.microfrontends);
-  //   }
-  //   fetchMicroFrontends();
-  // }, []);
+  const ref = useRef();
 
   useEffect(() => {
-    // Initialize the event bus
-    const eventBus = new EventBus();
+    const loadApps = async () => {
+      const eventBus = new EventBus();
 
-    // Initialize the shell
-    const shell = new Shell(eventBus);
+      const shell = new Shell(eventBus);
 
-    // // Register the miniapp
-    // shell.registerMiniApp("my-mini-app", MyMiniApp);
+      const currentApp = await shell.loadMiniApp(
+        "react-micro-frontend",
+        "http://localhost:4173/react-micro-frontend.js",
+        "http://localhost:4173/style.css"
+      );
 
-    // Load the miniapp (assuming you have it built and hosted)
-    shell.loadMiniApp(
-      "react-micro-frontend",
-      "http://localhost:4173/react-micro-frontend.js",
-      "http://localhost:4173/style.css"
-    );
+      ref.current.appendChild(currentApp);
+    };
+
+    loadApps();
   }, []);
-
-  // useEffect(() => {
-  //   // Listen for messages from micro-frontend 1 and forward them to micro-frontend 2
-  //   window.eventBus.on("message-from-micro-frontend-1", (message) => {
-  //     console.log("Shell received message from Micro-frontend 1:", message);
-
-  //     // Forward the message to Micro-frontend 2
-  //     window.eventBus.emit("message-to-micro-frontend-2", message);
-  //   });
-
-  //   return () => {
-  //     // Cleanup event listener
-  //     window.eventBus.off("message-from-micro-frontend-1");
-  //   };
-  // }, []);
 
   return (
     <div className="App">
       <h1>Shell: Micro-Frontend Loader</h1>
+      <div className="mini-app" ref={ref} />
     </div>
   );
 };

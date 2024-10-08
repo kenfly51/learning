@@ -3,23 +3,20 @@ import App from "./App";
 import "./index.css";
 import { MiniApp, MiniAppFactory } from "@noodle/atomkit";
 
-class ReactMicroFrontend extends MiniApp {
-  constructor() {
-    super();
-    this.root = createRoot(this);
-  }
-  connectedCallback() {
-    this.root.render(<App />);
-  }
-
-  disconnectedCallback() {
-    this.root.unmount();
-  }
-
+class MyMiniApp extends MiniApp {
   initialize() {
-    console.log("init mini app");
+    console.log("MyMiniApp Initialized");
+    this.listen("miniapp-message", (data) => {
+      console.log("Received in MyMiniApp:", data);
+    });
+  }
+
+  render(container) {
+    const root = createRoot(container);
+    root.render(<App miniApp={this} />);
+    console.log("rendered");
   }
 }
 
 // Register the Web Component
-MiniAppFactory.register("react-micro-frontend", ReactMicroFrontend);
+MiniAppFactory.register("react-micro-frontend", MyMiniApp);

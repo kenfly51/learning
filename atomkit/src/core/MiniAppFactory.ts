@@ -6,10 +6,10 @@ export class MiniAppFactory {
     customElements.define(tagName, miniAppClass);
   }
 
-  static createMiniApp<T extends MiniApp>(tagName: string, eventBus: IEventBus): T | undefined {
+  static createMiniApp<T extends MiniApp>(tagName: string, cssContent: string, eventBus: IEventBus): T | undefined {
     const miniAppClass = customElements.get(tagName);
     if (miniAppClass) {
-      return new (miniAppClass as new (eventBus: IEventBus) => T)(eventBus);
+      return new (miniAppClass as new (cssContent: string, eventBus: IEventBus) => T)(cssContent, eventBus);
     }
   }
 }
