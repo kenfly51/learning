@@ -106,6 +106,21 @@ const App = () => {
     fetchMicroFrontends();
   }, []);
 
+  useEffect(() => {
+    // Listen for messages from micro-frontend 1 and forward them to micro-frontend 2
+    window.eventBus.on("message-from-micro-frontend-1", (message) => {
+      console.log("Shell received message from Micro-frontend 1:", message);
+
+      // Forward the message to Micro-frontend 2
+      window.eventBus.emit("message-to-micro-frontend-2", message);
+    });
+
+    return () => {
+      // Cleanup event listener
+      window.eventBus.off("message-from-micro-frontend-1");
+    };
+  }, []);
+
   return (
     <div className="App">
       <h1>Shell: Micro-Frontend Loader</h1>

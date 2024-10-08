@@ -1,9 +1,10 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
 <template>
   <div>
+    {{ message }}
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
@@ -28,3 +29,22 @@ import HelloWorld from './components/HelloWorld.vue'
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      message: "",
+    };
+  },
+  mounted() {
+    // Listen for the message from Micro-frontend 1 via the global event bus
+    window.eventBus?.on("message-to-micro-frontend-2", (msg) => {
+      this.message = msg;
+    });
+  },
+  beforeDestroy() {
+    window.eventBus.off("message-to-micro-frontend-2");
+  },
+};
+</script>

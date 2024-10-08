@@ -2,13 +2,13 @@
   "microfrontends": [
     {
       "tagName": "react-micro-frontend",
-      "scriptUrl": "http://localhost:4173/micro-frontend-react.js",
-      "styleUrl": "http://localhost:4173/style.css"
+      "scriptUrl": "http://localhost:4174/micro-frontend-react.js",
+      "styleUrl": "http://localhost:4174/style.css"
     },
     {
       "tagName": "vue-micro-frontend",
-      "scriptUrl": "http://localhost:4174/micro-frontend-vue.js",
-      "styleUrl": "http://localhost:4174/style.css"
+      "scriptUrl": "http://localhost:4173/micro-frontend-vue.js",
+      "styleUrl": "http://localhost:4173/style.css"
     }
   ]
 }
