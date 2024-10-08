@@ -1,4 +1,4 @@
-// src/index.ts
-export const greet = (name: string): string => {
-  return `Hello, ${name}!!!`;
-};
+export * from './core/EventBus';
+export * from './core/MiniApp';
+export * from './core/MiniAppFactory';
+export * from './core/Shell';

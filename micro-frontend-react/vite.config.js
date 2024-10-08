@@ -16,7 +16,7 @@ export default defineConfig({
     lib: {
       entry: "./src/component.jsx",
       name: "ReactMicroFrontend",
-      fileName: () => `micro-frontend-react.js`,
+      fileName: () => `react-micro-frontend.js`,
       formats: ["es"], // Ensure it outputs in ES Module format
     },
     rollupOptions: {

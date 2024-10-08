@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { EventBus, Shell } from "@noodle/atomkit";
 
 // Define the dynamic Web Component loader
 class DynamicComponentLoader extends HTMLElement {
@@ -96,62 +94,52 @@ const App = () => {
   const [microFrontends, setMicroFrontends] = useState([]);
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    // Fetch the micro-frontend metadata from a remote source
-    async function fetchMicroFrontends() {
-      const response = await fetch("/sites.json");
-      const data = await response.json();
-      setMicroFrontends(data.microfrontends);
-    }
-    fetchMicroFrontends();
-  }, []);
+  // useEffect(() => {
+  //   // Fetch the micro-frontend metadata from a remote source
+  //   async function fetchMicroFrontends() {
+  //     const response = await fetch("/sites.json");
+  //     const data = await response.json();
+  //     setMicroFrontends(data.microfrontends);
+  //   }
+  //   fetchMicroFrontends();
+  // }, []);
 
   useEffect(() => {
-    // Listen for messages from micro-frontend 1 and forward them to micro-frontend 2
-    window.eventBus.on("message-from-micro-frontend-1", (message) => {
-      console.log("Shell received message from Micro-frontend 1:", message);
+    // Initialize the event bus
+    const eventBus = new EventBus();
 
-      // Forward the message to Micro-frontend 2
-      window.eventBus.emit("message-to-micro-frontend-2", message);
-    });
+    // Initialize the shell
+    const shell = new Shell(eventBus);
 
-    return () => {
-      // Cleanup event listener
-      window.eventBus.off("message-from-micro-frontend-1");
-    };
+    // // Register the miniapp
+    // shell.registerMiniApp("my-mini-app", MyMiniApp);
+
+    // Load the miniapp (assuming you have it built and hosted)
+    shell.loadMiniApp(
+      "react-micro-frontend",
+      "http://localhost:4173/react-micro-frontend.js",
+      "http://localhost:4173/style.css"
+    );
   }, []);
+
+  // useEffect(() => {
+  //   // Listen for messages from micro-frontend 1 and forward them to micro-frontend 2
+  //   window.eventBus.on("message-from-micro-frontend-1", (message) => {
+  //     console.log("Shell received message from Micro-frontend 1:", message);
+
+  //     // Forward the message to Micro-frontend 2
+  //     window.eventBus.emit("message-to-micro-frontend-2", message);
+  //   });
+
+  //   return () => {
+  //     // Cleanup event listener
+  //     window.eventBus.off("message-from-micro-frontend-1");
+  //   };
+  // }, []);
 
   return (
     <div className="App">
       <h1>Shell: Micro-Frontend Loader</h1>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      {microFrontends.map((mf, index) => (
-        <dynamic-component-loader
-          key={index}
-          tag-name={mf.tagName}
-          src={mf.scriptUrl}
-          style-url={mf.styleUrl}
-        ></dynamic-component-loader>
-      ))}
     </div>
   );
 };

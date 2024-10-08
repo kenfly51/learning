@@ -1,8 +1,9 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { MiniApp, MiniAppFactory } from "@noodle/atomkit";
 
-class ReactMicroFrontend extends HTMLElement {
+class ReactMicroFrontend extends MiniApp {
   constructor() {
     super();
     this.root = createRoot(this);
@@ -14,7 +15,11 @@ class ReactMicroFrontend extends HTMLElement {
   disconnectedCallback() {
     this.root.unmount();
   }
+
+  initialize() {
+    console.log("init mini app");
+  }
 }
 
 // Register the Web Component
-customElements.define("react-micro-frontend", ReactMicroFrontend);
+MiniAppFactory.register("react-micro-frontend", ReactMicroFrontend);
